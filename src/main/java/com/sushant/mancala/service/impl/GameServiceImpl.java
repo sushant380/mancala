@@ -20,10 +20,11 @@ public class GameServiceImpl implements GameService {
 
   @Inject private GameRepository gameRepository;
 
-  @Value("mancala.pits")
+  @Value("${mancala.pits}")
   private int pits;
 
-  @Value("mancala.pables")
+  @Value("${mancala.pables}")
+
   private int pables;
 
   @Inject private GameMapper mapper;
