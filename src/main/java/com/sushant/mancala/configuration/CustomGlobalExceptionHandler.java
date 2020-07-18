@@ -7,6 +7,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.sushant.mancala.exception.GameFullException;
+import com.sushant.mancala.exception.GameNotFoundException;
+import com.sushant.mancala.exception.InvalidGameException;
+import com.sushant.mancala.exception.InvalidPlayerMoveException;
+import com.sushant.mancala.exception.UnauthorizedPlayerException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,13 +48,58 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
   }
 
   // error handle for internal data exception due to malformed data.
-  @ExceptionHandler(DataException.class)
-  public ResponseEntity<Object> handleCityNotFoundException(DataException ex, WebRequest request) {
+  @ExceptionHandler(GameFullException.class)
+  public ResponseEntity<Object> handleGameFullException(GameFullException ex, WebRequest request) {
 
     Map<String, Object> body = new LinkedHashMap<>();
     body.put("timestamp", LocalDateTime.now());
-    body.put("message", "City not found");
+    body.put("message", "Game registration is full. Please look for other game");
 
     return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+  // error handle for internal data exception due to malformed data.
+  @ExceptionHandler(GameNotFoundException.class)
+  public ResponseEntity<Object> handleGameNotFoundException(GameNotFoundException ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", "Game not found. May be its finished or deleted");
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+  // error handle for internal data exception due to malformed data.
+  @ExceptionHandler(InvalidGameException.class)
+  public ResponseEntity<Object> handleInvalidGameException(InvalidGameException ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", "Game is running or finished. You can not join the game");
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
+
+
+  // error handle for internal data exception due to malformed data.
+  @ExceptionHandler(InvalidPlayerMoveException.class)
+  public ResponseEntity<Object> handleInvalidPlayerMoveException(InvalidPlayerMoveException ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", "You can not make a move. Its other player's turn");
+
+    return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+  }
+
+  // error handle for internal data exception due to malformed data.
+  @ExceptionHandler(UnauthorizedPlayerException.class)
+  public ResponseEntity<Object> handleUnauthorizedPlayerException(UnauthorizedPlayerException ex, WebRequest request) {
+
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("timestamp", LocalDateTime.now());
+    body.put("message", "You are not registered for this game. You can not join or make a move");
+
+    return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
   }
 }

@@ -32,6 +32,14 @@ class RestSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .password("{noop}admin")
         .authorities("ADMIN")
         .and()
+        .withUser("player1")
+        .password("{noop}player1")
+        .authorities("USER")
+        .and()
+        .withUser("player2")
+        .password("{noop}player2")
+        .authorities("USER")
+        .and()
         .withUser("test")
         .password("{noop}test")
         .authorities("ADMIN");
@@ -52,7 +60,7 @@ class RestSecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/webjars/**")
         .permitAll()
         .antMatchers("/games**")
-        .access("hasAnyAuthority('ADMIN')");
+        .access("hasAnyAuthority('ADMIN','USER')");
     http.httpBasic()
         .authenticationEntryPoint(
             new BasicAuthenticationEntryPoint() { // << implementing this interface
