@@ -1,4 +1,3 @@
 package com.sushant.mancala.exception;
 
-public class GameNotFoundException extends RuntimeException{
-}
+public class GameNotFoundException extends RuntimeException {}

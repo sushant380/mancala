@@ -6,7 +6,6 @@ import static springfox.documentation.builders.PathSelectors.regex;
 import com.google.common.base.Predicates;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
