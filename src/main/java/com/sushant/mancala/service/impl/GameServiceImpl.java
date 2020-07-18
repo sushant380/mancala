@@ -24,6 +24,7 @@ public class GameServiceImpl implements GameService {
   private int pits;
 
   @Value("${mancala.pables}")
+
   private int pables;
 
   @Inject private GameMapper mapper;
