@@ -1,10 +1,11 @@
 package com.sushant.mancala.configuration;
-
+/*
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 import com.google.common.base.Predicates;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,17 +26,16 @@ import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/** Swagger integration to support Open API specification 2. */
+
+
 @EnableSwagger2
 @Configuration
 public class SwaggerConfiguration {
 
   @Primary
   @Bean
-  public LinkDiscoverers discoverers() {
-    List<LinkDiscoverer> plugins = new ArrayList<>();
-    plugins.add(new CollectionJsonLinkDiscoverer());
-    return new LinkDiscoverers(SimplePluginRegistry.create(plugins));
+  public LinkDiscoverers discoverers(){
+    return new LinkDiscoverers(SimplePluginRegistry.create(Arrays.asList(new CollectionJsonLinkDiscoverer())));
   }
 
   @Bean
@@ -66,3 +66,4 @@ public class SwaggerConfiguration {
         .build();
   }
 }
+*/

@@ -42,7 +42,15 @@ class RestSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .withUser("test")
         .password("{noop}test")
-        .authorities("ADMIN");
+        .authorities("ADMIN")
+            .and()
+            .withUser("TEST_PLAYER_1")
+            .password("{noop}test")
+            .authorities("ADMIN")
+            .and()
+            .withUser("TEST_PLAYER_2")
+            .password("{noop}test")
+            .authorities("ADMIN");
   }
 
   // Configure api's with and without security. Swagger ui resources are excluded from

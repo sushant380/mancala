@@ -8,7 +8,7 @@ import com.sushant.mancala.exception.InvalidGameException;
 import com.sushant.mancala.handler.GameHandler;
 import com.sushant.mancala.repository.GameRepository;
 import com.sushant.mancala.service.GameService;
-import com.sushant.mancala.utility.GameMapper;
+import com.sushant.mancala.utils.GameMapper;
 import java.util.List;
 import java.util.Optional;
 import javax.inject.Inject;
@@ -24,23 +24,21 @@ public class GameServiceImpl implements GameService {
   private int pits;
 
   @Value("${mancala.pables}")
-
   private int pables;
 
-  @Inject private GameMapper mapper;
+  @Inject private GameHandler gameHandler;
 
   @Override
   public List<GameDto> getGames() {
-    return mapper.mapGamesDto(gameRepository.findAll());
+    return GameMapper.mapGamesDto(gameRepository.findAll());
   }
 
   @Override
   public GameDto createAndJoinGame(String playerId) {
-    Game game = GameHandler.getGame(pits, pables);
-    ;
-    GameHandler.joinGame(game, playerId);
+    Game game = gameHandler.getGame(pits, pables);
+    gameHandler.joinGame(game, playerId);
     gameRepository.save(game);
-    return mapper.mapDto(game);
+    return GameMapper.mapDto(game);
   }
 
   @Override
@@ -49,9 +47,9 @@ public class GameServiceImpl implements GameService {
     if (gameOption.isPresent()) {
       Game game = gameOption.get();
       if (game.getStatus() == GameStatus.CREATED) {
-        GameHandler.joinGame(game, playerId);
+        gameHandler.joinGame(game, playerId);
         gameRepository.save(game);
-        return mapper.mapDto(game);
+        return GameMapper.mapDto(game);
       } else {
         throw new InvalidGameException();
       }
@@ -65,9 +63,9 @@ public class GameServiceImpl implements GameService {
     Optional<Game> gameOption = gameRepository.findById(gameId);
     if (gameOption.isPresent()) {
       Game game = gameOption.get();
-      GameHandler.move(game, playerId, pitId);
+      gameHandler.move(game, playerId, pitId);
       gameRepository.save(game);
-      return mapper.mapDto(game);
+      return GameMapper.mapDto(game);
     } else {
       throw new GameNotFoundException();
     }
@@ -77,7 +75,7 @@ public class GameServiceImpl implements GameService {
   public GameDto findById(String gameId) {
     Optional<Game> gameOption = gameRepository.findById(gameId);
     if (gameOption.isPresent()) {
-      return mapper.mapDto(gameOption.get());
+      return GameMapper.mapDto(gameOption.get());
     }
     throw new GameNotFoundException();
   }
