@@ -129,7 +129,7 @@ public class GameHandler {
       throw new InvalidPlayerMoveException("You can not make a move. Its other player's turn");
     }
     // If Player is sending invalid pit id.
-    if (pitId > currentPlayer.getPlayersPits().size()) {
+    if (pitId > game.getPits().size()) {
       throw new InvalidPlayerMoveException("You can not make a move. Its invalid pit");
     }
 
