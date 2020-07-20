@@ -10,7 +10,6 @@ public class BuildConfiguration {
   private String title;
   private String description;
   private String version;
-  private String timestamp;
 
   public String getTitle() {
     return title;
@@ -36,11 +35,4 @@ public class BuildConfiguration {
     this.version = version;
   }
 
-  public String getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(String timestamp) {
-    this.timestamp = timestamp;
-  }
-}
+ }

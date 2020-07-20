@@ -1,14 +1,20 @@
 package com.sushant.mancala.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sushant.mancala.common.GameStatus;
 import com.sushant.mancala.domain.Game;
 import com.sushant.mancala.domain.Player;
 import com.sushant.mancala.dto.GameDto;
 import com.sushant.mancala.dto.PlayerDto;
+import com.sushant.mancala.exception.GameNotFoundException;
+import com.sushant.mancala.exception.InvalidGameException;
 import com.sushant.mancala.handler.GameHandler;
 import com.sushant.mancala.repository.GameRepository;
 import com.sushant.mancala.service.impl.GameServiceImpl;
 import com.sushant.mancala.utils.GameMapper;
+
+import static com.sushant.mancala.constant.GameConstants.PLAYER_3;
+import static com.sushant.mancala.constant.GameConstants.RANDOM_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +28,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sushant.mancala.constant.GameConstants.PLAYER_1;
+import static com.sushant.mancala.constant.GameConstants.PLAYER_2;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class GameServiceTest {
@@ -53,9 +62,6 @@ public class GameServiceTest {
 
     GameHandler anotherHandler;
 
-    public static String PLAYER_1 = "TEST_PLAYER_1";
-
-    public static String PLAYER_2 = "TEST_PLAYER_2";
 
     @BeforeEach
     void setup() {
@@ -94,6 +100,14 @@ public class GameServiceTest {
         assertThat(game.getPlayers()[1]).isNotNull();
         assertThat(game.getPlayers()[1].get_id()).isEqualTo(PLAYER_2);
     }
+
+    @Test
+    public void joinRunnigGame(){
+        gameModel.setStatus(GameStatus.STARTED);
+        when(gameRepository.findById(gameModel.get_id())).thenReturn(Optional.of(gameModel));
+        assertThrows(InvalidGameException.class,()->gameService.joinGame(gameModel.get_id(),PLAYER_3));
+    }
+
     @Test
     public void makeMove(){
         anotherHandler.joinGame(gameModel,PLAYER_1);
@@ -111,6 +125,13 @@ public class GameServiceTest {
         assertThat(game).isNotNull();
         assertThat(game.get_id()).isEqualTo(gameModel.get_id());
     }
+
+    @Test
+    public void gameNotFound(){
+        when(gameRepository.findById(any(String.class))).thenReturn(Optional.empty());
+        assertThrows(GameNotFoundException.class,()-> gameService.findById(RANDOM_ID));
+    }
+
     @Test
     public void delete(){
         when(gameRepository.findById(gameModel.get_id())).thenReturn(Optional.of(gameModel));

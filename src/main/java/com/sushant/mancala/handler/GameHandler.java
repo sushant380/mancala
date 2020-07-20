@@ -4,7 +4,6 @@ import com.sushant.mancala.common.GameStatus;
 import com.sushant.mancala.domain.Game;
 import com.sushant.mancala.domain.Pit;
 import com.sushant.mancala.domain.Player;
-import com.sushant.mancala.exception.GameFullException;
 import com.sushant.mancala.exception.InvalidPlayerMoveException;
 import com.sushant.mancala.exception.UnauthorizedPlayerException;
 import org.springframework.stereotype.Component;
@@ -64,8 +63,6 @@ public class GameHandler {
       game.setStatus(GameStatus.STARTED);
     }else if(players[1].get_id()==playerId){
       return;
-    } else {
-      throw new GameFullException();
     }
   }
 
@@ -82,10 +79,18 @@ public class GameHandler {
 
   public void move(Game game, String playerId, int pitId) {
     Player currentPlayer = getPlayerById(game, playerId);
-    if (game.getNextPlayer() != null && !game.getNextPlayer().equals(currentPlayer)) {
-      throw new InvalidPlayerMoveException();
+    if ((game.getNextPlayer() != null && !game.getNextPlayer().equals(currentPlayer))) {
+      throw new InvalidPlayerMoveException("You can not make a move. Its other player's turn");
     }
+    if(!currentPlayer.getPlayersPits().contains(pitId)){
+      throw new InvalidPlayerMoveException("You can not make a move. Its not your pit");
+    }
+
     Pit currentPit = game.getPit(pitId);
+    if(currentPit.getPables()==0){
+      throw new InvalidPlayerMoveException("You can not make a move. The pit is empty");
+    }
+
     int pables = currentPit.peek();
     for (int i = 0; i < pables; i++) {
       Pit nextPit = game.getPit(currentPit.getNextPit());
