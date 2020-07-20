@@ -1,10 +1,12 @@
 package com.sushant.mancala.domain;
 
-import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+/** Player data model for storage */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode

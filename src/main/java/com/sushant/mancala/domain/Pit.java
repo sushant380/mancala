@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/** Pit model for storage */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode

@@ -9,12 +9,14 @@ import com.sushant.mancala.handler.GameHandler;
 import com.sushant.mancala.repository.GameRepository;
 import com.sushant.mancala.service.GameService;
 import com.sushant.mancala.utils.GameMapper;
-import java.util.List;
-import java.util.Optional;
-import javax.inject.Inject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+
+/** Game service implementation. */
 @Service
 public class GameServiceImpl implements GameService {
 
