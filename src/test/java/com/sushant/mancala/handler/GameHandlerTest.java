@@ -93,6 +93,9 @@ public class GameHandlerTest {
     assertThat(game.getPit(14).getPables()).isEqualTo(oppositeMancalaCount);
     assertThat(game.getPit(1).getPables()).isNotEqualTo(firstPitCount);
 
+    gameHandler.move(game, PLAYER_2, 9);
+    gameHandler.move(game, PLAYER_1, 4);
+
     game.getPit(8).setPables(0);
     game.getPit(9).setPables(0);
     game.getPit(10).setPables(0);

@@ -2,7 +2,7 @@
   
 # Mancala  
 
-[![Build Status](https://api.travis-ci.org/sushant380/mancala.svg?branch=master)](https://travis-ci.org/sushant380/mancala)
+[![Build Status](https://travis-ci.org/sushant380/mancala.svg?branch=master)](https://travis-ci.org/sushant380/mancala)
 [![Code Coverage](https://codecov.io/github/sushant380/mancala/coverage.svg)](https://codecov.io/gh/sushant380/mancala)
 
   
