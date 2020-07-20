@@ -52,6 +52,7 @@ public class GameHandlerTest {
     assertThat((game.getPlayers()[1].getPlayersPits())).isNotEmpty();
     assertThat(game.getPlayers()[1].getMancalaPit()).isEqualTo((PITS * 2));
     assertThat(game.getNextPlayer().get_id()).isEqualTo(PLAYER_1);
+    gameHandler.joinGame(game, PLAYER_2);
   }
 
   @Test

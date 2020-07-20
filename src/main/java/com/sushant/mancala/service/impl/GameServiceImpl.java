@@ -44,7 +44,7 @@ public class GameServiceImpl implements GameService {
   }
 
   @Override
-  public GameDto joinGame(String gameId, String playerId) {
+  public GameDto    joinGame(String gameId, String playerId) {
     Optional<Game> gameOption = gameRepository.findById(gameId);
     if (gameOption.isPresent()) {
       Game game = gameOption.get();

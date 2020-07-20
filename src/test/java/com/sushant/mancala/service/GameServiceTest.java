@@ -94,6 +94,12 @@ public class GameServiceTest {
   }
 
   @Test
+  public void joinGameNotFound() {
+    when(gameRepository.findById(gameModel.get_id())).thenReturn(Optional.empty());
+    assertThrows(GameNotFoundException.class,()->gameService.joinGame(gameModel.get_id(), PLAYER_2));
+  }
+
+  @Test
   public void joinRunnigGame() {
     gameModel.setStatus(GameStatus.STARTED);
     when(gameRepository.findById(gameModel.get_id())).thenReturn(Optional.of(gameModel));
@@ -110,6 +116,12 @@ public class GameServiceTest {
     GameDto game = gameService.makeMove(gameModel.get_id(), PLAYER_1, 2);
     assertThat(game.getNextPlayer().get_id()).isEqualTo(PLAYER_2);
     assertThat(game.getPits().get(1).getPables()).isEqualTo(0);
+  }
+
+  @Test
+  public void makeMoveGameNotFound() {
+    when(gameRepository.findById(gameModel.get_id())).thenReturn(Optional.empty());
+    assertThrows(GameNotFoundException.class,()->gameService.makeMove(gameModel.get_id(), PLAYER_2,1));
   }
 
   @Test
@@ -131,5 +143,11 @@ public class GameServiceTest {
     when(gameRepository.findById(gameModel.get_id())).thenReturn(Optional.of(gameModel));
     doNothing().when(gameRepository).delete(gameModel);
     gameService.delete(gameModel.get_id());
+  }
+
+  @Test
+  public void deleteGameNotFound() {
+    when(gameRepository.findById(any(String.class))).thenReturn(Optional.empty());
+    assertThrows(GameNotFoundException.class, () -> gameService.delete(RANDOM_ID));
   }
 }
