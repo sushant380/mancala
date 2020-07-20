@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/** Player data model for storage */
+/** Player data model for storage. */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode

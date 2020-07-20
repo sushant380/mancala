@@ -7,7 +7,6 @@ import com.sushant.mancala.domain.Player;
 import com.sushant.mancala.exception.InvalidPlayerMoveException;
 import com.sushant.mancala.exception.UnauthorizedPlayerException;
 import org.springframework.stereotype.Component;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,10 +34,10 @@ public class GameHandler {
   }
 
   /**
-   * Create pits for the game
+   * Create pits for the game.
    *
-   * @param pitsCount Number of pits for each player
-   * @param pables Number of pables in each pits
+   * @param pitsCount Number of pits for each player.
+   * @param pables Number of pables in each pits.
    * @return list of pits.
    */
   private List<Pit> getPits(int pitsCount, int pables) {
@@ -98,11 +97,11 @@ public class GameHandler {
   }
 
   /**
-   * Get player based on player's id in the game
+   * Get player based on player's id in the game.
    *
-   * @param game Game for which player is registered
-   * @param playerId Player's id
-   * @return Player
+   * @param game Game for which player is registered.
+   * @param playerId Player's id.
+   * @return Player.
    */
   private Player getPlayerById(Game game, String playerId) {
     Player[] players = game.getPlayers();

@@ -3,7 +3,6 @@ package com.sushant.mancala.domain;
 import com.sushant.mancala.common.GameStatus;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 
 /** Game model for storage. */

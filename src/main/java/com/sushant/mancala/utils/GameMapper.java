@@ -8,11 +8,9 @@ import com.sushant.mancala.dto.GameDto;
 import com.sushant.mancala.dto.PitDto;
 import com.sushant.mancala.dto.PlayerDto;
 import org.springframework.hateoas.Link;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -22,20 +20,20 @@ public class GameMapper {
   private GameMapper() {}
 
   /**
-   * Convert all games to dtos
+   * Convert all games to dtos.
    *
-   * @param games List of games
-   * @return List of dtos
+   * @param games List of games.
+   * @return List of dtos.
    */
   public static List<GameDto> mapGamesDto(List<Game> games) {
     return games.stream().map(GameMapper::mapDto).collect(Collectors.toList());
   }
 
   /**
-   * Convert model to dto
+   * Convert model to dto.
    *
-   * @param game game model
-   * @return dto
+   * @param game game model.
+   * @return dto.
    */
   public static GameDto mapDto(Game game) {
     GameDto gameDto =

@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
-/** Pit dto for api calls */
+/** Pit dto for api calls. */
 @Data
 @Builder
 public class PitDto extends RepresentationModel<PitDto> {

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.inject.Inject;
 import javax.validation.constraints.Min;
 import java.util.List;
@@ -40,7 +39,9 @@ public class GameController {
   @Operation(
       summary = "Create new game and join",
       description =
-          "Create new game and the user will get registered for the game as player. Use authorization header for player access. Username is player id used of registration")
+          "Create new game and the user will get registered for the game as player. "
+          + "Use authorization header for player access. "
+          + "Username is player id used of registration")
   @ApiResponses(
       value = {
         @ApiResponse(

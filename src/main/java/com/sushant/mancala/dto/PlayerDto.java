@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-/** Player dto for api calls */
+/** Player dto for api calls. */
 @Data
 @Builder
 public class PlayerDto {

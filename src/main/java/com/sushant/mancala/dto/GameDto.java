@@ -5,10 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
-
 import java.util.List;
 
-/** Game dto for api calls */
+/** Game dto for api calls. */
 @Builder
 @Data
 public class GameDto extends RepresentationModel<GameDto> {
