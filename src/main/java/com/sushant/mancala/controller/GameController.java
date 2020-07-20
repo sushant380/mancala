@@ -2,10 +2,14 @@ package com.sushant.mancala.controller;
 
 import com.sushant.mancala.dto.GameDto;
 import com.sushant.mancala.service.GameService;
-import com.sushant.mancala.utility.GameMapper;
+
 import java.util.List;
 import javax.inject.Inject;
 import javax.validation.constraints.Min;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,19 +23,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
+
 
 @RestController
 @RequestMapping("/games")
 @Validated
+@SecurityRequirement(name="basicAuth")
 public class GameController {
 
   @Inject private GameService gameService;
 
-  private GameMapper linkResolver = new GameMapper();
-
   @PostMapping(produces = "application/json")
-  public ResponseEntity createGame(@ApiIgnore @AuthenticationPrincipal User user) {
+  public ResponseEntity createGame(@Parameter(hidden = true) @AuthenticationPrincipal User user) {
     GameDto game = gameService.createAndJoinGame(user.getUsername());
     return new ResponseEntity(game, HttpStatus.CREATED);
   }
@@ -48,20 +51,20 @@ public class GameController {
     return new ResponseEntity(game, HttpStatus.OK);
   }
 
-  @PutMapping(path = "/{gameId}/pits/{pitId}", produces = "application/json")
-  public ResponseEntity makeMov(
-      @PathVariable(value = "gameId") String gameId,
-      @Min(value = 1) @PathVariable(value = "pitId") int pitId,
-      @ApiIgnore @AuthenticationPrincipal User user) {
-    GameDto game = gameService.makeMove(gameId, user.getUsername(), pitId);
+  @PutMapping(path = "/{gameId}/join", produces = "application/json")
+  public ResponseEntity join(
+          @PathVariable(value = "gameId") String gameId,
+          @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+    GameDto game = gameService.joinGame(gameId, user.getUsername());
     return new ResponseEntity(game, HttpStatus.OK);
   }
 
-  @PostMapping(path = "/{gameId}/join", produces = "application/json")
-  public ResponseEntity join(
+  @PutMapping(path = "/{gameId}/pits/{pitId}", produces = "application/json")
+  public ResponseEntity makeMove(
       @PathVariable(value = "gameId") String gameId,
-      @ApiIgnore @AuthenticationPrincipal User user) {
-    GameDto game = gameService.joinGame(gameId, user.getUsername());
+      @Min(value = 1) @PathVariable(value = "pitId") int pitId,
+      @Parameter(hidden = true) @AuthenticationPrincipal User user) {
+    GameDto game = gameService.makeMove(gameId, user.getUsername(), pitId);
     return new ResponseEntity(game, HttpStatus.OK);
   }
 
@@ -69,7 +72,7 @@ public class GameController {
   @DeleteMapping(path = "/{gameId}", produces = "application/json")
   public void delete(
       @PathVariable(value = "gameId") String gameId,
-      @ApiIgnore @AuthenticationPrincipal User user) {
+      @Parameter(hidden = true) @AuthenticationPrincipal User user) {
     gameService.delete(gameId);
   }
 }

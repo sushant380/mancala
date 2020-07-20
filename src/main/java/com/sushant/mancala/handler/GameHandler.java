@@ -4,22 +4,24 @@ import com.sushant.mancala.common.GameStatus;
 import com.sushant.mancala.domain.Game;
 import com.sushant.mancala.domain.Pit;
 import com.sushant.mancala.domain.Player;
-import com.sushant.mancala.exception.GameFullException;
 import com.sushant.mancala.exception.InvalidPlayerMoveException;
 import com.sushant.mancala.exception.UnauthorizedPlayerException;
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public final class GameHandler {
-  public static Game getGame(int pits, int pables) {
+@Component
+public class GameHandler {
+  public Game getGame(int pits, int pables) {
     Game game = new Game();
     game.setPits(getPits(pits, pables));
     return game;
   }
 
-  private static List<Pit> getPits(int pitsCount, int pables) {
+  private List<Pit> getPits(int pitsCount, int pables) {
     int totalPits = (pitsCount * 2);
     List<Pit> pits =
         IntStream.range(0, totalPits)
@@ -43,28 +45,28 @@ public final class GameHandler {
     return pits;
   }
 
-  public static boolean joinGame(Game game, String playerId) {
+  public void joinGame(Game game, String playerId) {
     Player[] players = game.getPlayers();
     if (players[0] == null) {
       players[0] = new Player(playerId, (game.getPits().size() / 2));
       players[0].setPlayersPits(
           IntStream.range(1, (game.getPits().size() / 2)).boxed().collect(Collectors.toList()));
       game.setNextPlayer(players[0]);
-      return true;
-    } else if (players[1] == null) {
+    }else if(players[0].get_id()==playerId){
+      return;
+    } else if (players[1] == null && players[0].get_id()!=playerId) {
       players[1] = new Player(playerId, game.getPits().size());
       players[1].setPlayersPits(
           IntStream.range((game.getPits().size() / 2) + 1, game.getPits().size())
               .boxed()
               .collect(Collectors.toList()));
       game.setStatus(GameStatus.STARTED);
-      return true;
-    } else {
-      throw new GameFullException();
+    }else if(players[1].get_id()==playerId){
+      return;
     }
   }
 
-  private static Player getPlayerById(Game game, String playerId) {
+  private Player getPlayerById(Game game, String playerId) {
     Player[] players = game.getPlayers();
     if (players[0] != null && players[0].get_id().equals(playerId)) {
       return players[0];
@@ -75,12 +77,20 @@ public final class GameHandler {
     }
   }
 
-  public static void move(Game game, String playerId, int pitId) {
-    Player currentPlayer = GameHandler.getPlayerById(game, playerId);
-    if (game.getNextPlayer() != null && !game.getNextPlayer().equals(currentPlayer)) {
-      throw new InvalidPlayerMoveException();
+  public void move(Game game, String playerId, int pitId) {
+    Player currentPlayer = getPlayerById(game, playerId);
+    if ((game.getNextPlayer() != null && !game.getNextPlayer().equals(currentPlayer))) {
+      throw new InvalidPlayerMoveException("You can not make a move. Its other player's turn");
     }
+    if(!currentPlayer.getPlayersPits().contains(pitId)){
+      throw new InvalidPlayerMoveException("You can not make a move. Its not your pit");
+    }
+
     Pit currentPit = game.getPit(pitId);
+    if(currentPit.getPables()==0){
+      throw new InvalidPlayerMoveException("You can not make a move. The pit is empty");
+    }
+
     int pables = currentPit.peek();
     for (int i = 0; i < pables; i++) {
       Pit nextPit = game.getPit(currentPit.getNextPit());

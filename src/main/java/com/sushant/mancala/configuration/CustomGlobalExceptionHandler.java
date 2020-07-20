@@ -1,6 +1,5 @@
 package com.sushant.mancala.configuration;
 
-import com.sushant.mancala.exception.GameFullException;
 import com.sushant.mancala.exception.GameNotFoundException;
 import com.sushant.mancala.exception.InvalidGameException;
 import com.sushant.mancala.exception.InvalidPlayerMoveException;
@@ -26,36 +25,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  // error handle for @Valid annotation on controller request for input parameters
-  @Override
-  protected ResponseEntity<Object> handleMethodArgumentNotValid(
-      MethodArgumentNotValidException ex,
-      HttpHeaders headers,
-      HttpStatus status,
-      WebRequest request) {
-    Map<String, Object> body = new LinkedHashMap<>();
-    body.put("timestamp", new Date());
-    body.put("status", status.value());
-
-    // Get all errors
-    List<String> errors =
-        ex.getBindingResult().getFieldErrors().stream()
-            .map(FieldError::getDefaultMessage)
-            .collect(Collectors.toList());
-    body.put("errors", errors);
-    return new ResponseEntity<>(body, headers, status);
-  }
-
-  // error handle for internal data exception due to malformed data.
-  @ExceptionHandler(GameFullException.class)
-  public ResponseEntity<Object> handleGameFullException(GameFullException ex, WebRequest request) {
-
-    Map<String, Object> body = new LinkedHashMap<>();
-    body.put("timestamp", LocalDateTime.now());
-    body.put("message", "Game registration is full. Please look for other game");
-
-    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-  }
 
   // error handle for internal data exception due to malformed data.
   @ExceptionHandler(GameNotFoundException.class)
@@ -88,7 +57,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     Map<String, Object> body = new LinkedHashMap<>();
     body.put("timestamp", LocalDateTime.now());
-    body.put("message", "You can not make a move. Its other player's turn");
+    body.put("message", ex.getMessage());
 
     return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
   }
