@@ -2,7 +2,7 @@
   
 # Mancala  
 
-[![Build Status](https://travis-ci.org/sushant380/mancala.svg?branch=master)](https://travis-ci.org/sushant380/mancala)
+[![Build Status](https://api.travis-ci.org/sushant380/mancala.svg?branch=master)](https://travis-ci.org/sushant380/mancala)
 
   
 ### Java, Maven, Spring Boot, Spring Security, Rest API, Swagger, Embedded Mongo DB  
