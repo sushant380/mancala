@@ -24,4 +24,4 @@ jdk:
 # This is to enable CodeCov's coverage
 # If a build is successful, the code is submitted for coverage analysis
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -t 7f68f0e2-0461-4ef6-8ed0-1261fcf19ffa
+  - bash <(curl -s https://codecov.io/bash)
