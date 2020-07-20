@@ -6,6 +6,8 @@ import com.sushant.mancala.domain.Pit;
 import com.sushant.mancala.domain.Player;
 import com.sushant.mancala.exception.InvalidPlayerMoveException;
 import com.sushant.mancala.exception.UnauthorizedPlayerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.stream.IntStream;
  */
 @Component
 public class GameHandler {
+  private final Logger LOGGER= LoggerFactory.getLogger(GameHandler.class);
   /**
    * Create new game with given pits and pables values. Game will always have double number of pits
    * and it will assign default pables to each pit. This will also decide which pit is mancala pit.
@@ -29,6 +32,7 @@ public class GameHandler {
    */
   public Game getGame(int pits, int pables) {
     Game game = new Game();
+    LOGGER.info("Game created. Creating pits");
     game.setPits(getPits(pits, pables));
     return game;
   }
@@ -42,6 +46,7 @@ public class GameHandler {
    */
   private List<Pit> getPits(int pitsCount, int pables) {
     int totalPits = (pitsCount * 2);
+    LOGGER.info("Total pits for the game {}",totalPits);
     List<Pit> pits =
         IntStream.range(0, totalPits)
             .mapToObj(
@@ -73,6 +78,7 @@ public class GameHandler {
    * @param playerId Player's registered id.
    */
   public void joinGame(Game game, String playerId) {
+    LOGGER.info("{} wants to join game {}",playerId, game.get_id());
     Player[] players = game.getPlayers();
     if (players[0] == null) {
       players[0] = new Player(playerId, (game.getPits().size() / 2));
@@ -80,8 +86,10 @@ public class GameHandler {
       players[0].setPlayersPits(
           IntStream.range(1, (game.getPits().size() / 2)).boxed().collect(Collectors.toList()));
       game.setNextPlayer(players[0]);
+      LOGGER.info("{} joined the game {}. Waiting for the second player to join",playerId, game.get_id());
     } else if (players[0].get_id() == playerId) {
       // if already registered player is sending a request to join again
+      LOGGER.info("{} already joined the game {}. Waiting for the second player to join",playerId, game.get_id());
       return;
     } else if (players[1] == null && players[0].get_id() != playerId) {
       players[1] = new Player(playerId, game.getPits().size());
@@ -90,8 +98,10 @@ public class GameHandler {
           IntStream.range((game.getPits().size() / 2) + 1, game.getPits().size())
               .boxed()
               .collect(Collectors.toList()));
+      LOGGER.info("{} player joined, Starting the {}",playerId, game.get_id());
       game.setStatus(GameStatus.STARTED);
     } else if (players[1].get_id() == playerId) {
+      LOGGER.info("{} already joined the game {}. Waiting for the second player to join",playerId, game.get_id());
       return;
     }
   }
@@ -105,6 +115,7 @@ public class GameHandler {
    */
   private Player getPlayerById(Game game, String playerId) {
     Player[] players = game.getPlayers();
+    LOGGER.info("Searching {} in the game {}",playerId, game.get_id());
     if (players[0] != null && players[0].get_id().equals(playerId)) {
       return players[0];
     } else if (players[1] != null && players[1].get_id().equals(playerId)) {
@@ -123,7 +134,7 @@ public class GameHandler {
    */
   public void move(Game game, String playerId, int pitId) {
     Player currentPlayer = getPlayerById(game, playerId);
-
+    LOGGER.info("{} making a move in the game {}",playerId, game.get_id());
     // If Its not player's turn
     if ((game.getNextPlayer() != null && !game.getNextPlayer().equals(currentPlayer))) {
       throw new InvalidPlayerMoveException("You can not make a move. Its other player's turn");
@@ -146,10 +157,12 @@ public class GameHandler {
     }
 
     int pables = currentPit.peek();
+    LOGGER.info("{} pables in the pit {} a move in the game {}",pables,pitId, game.get_id());
     for (int i = 0; i < pables; i++) {
       Pit nextPit = game.getPit(currentPit.getNextPit());
       // do not put into opposite player's mancala
       if (nextPit.isMancala() && !nextPit.equals(game.getPit(currentPlayer.getMancalaPit()))) {
+        LOGGER.info("Pit {} is opposite pleyer's mancala in the game {}. Get next pit",pitId, game.get_id());
         nextPit = game.getPit(nextPit.getNextPit());
       }
       nextPit.put();
@@ -158,8 +171,10 @@ public class GameHandler {
     // Rule 1 check if last pable is in current player's mancala. if yes then player get another
     // turn
     if (currentPit.equals(game.getPit(currentPlayer.getMancalaPit()))) {
+      LOGGER.info("Pit {} is pleyer's mancala in the game {}. {} players earn the move",pitId, game.get_id());
       game.setNextPlayer(currentPlayer);
     } else {
+      LOGGER.info("Next pleyer's move in the game {}.",game.get_id());
       game.setNextPlayer(
           Arrays.stream(game.getPlayers())
               .filter(player -> player.get_id() != currentPlayer.get_id())
@@ -171,6 +186,7 @@ public class GameHandler {
     // player's mancala.
     if (currentPit.getPables() == 1
         && currentPlayer.getPlayersPits().contains(currentPit.getPitIndex())) {
+      LOGGER.info("Pit {} was empty pit and pables in the opposite pit is moving to {} mancala in the game {}.",currentPit.getPitIndex(),playerId,game.get_id());
       int movePables = currentPit.peek() + game.getPit(currentPit.getOppositePit()).peek();
       game.getPit(currentPlayer.getMancalaPit()).add(movePables);
     }
@@ -186,6 +202,7 @@ public class GameHandler {
                         .allMatch(empty -> empty == true))
             .anyMatch(player -> player == true);
     if (isPlayerAllPitsEmpty) {
+      LOGGER.info("One side of the pits are empty in the game {}. finishing the game.",game.get_id());
       game.setStatus(GameStatus.FINISHED);
       if (game.getPit(game.getPlayers()[0].getMancalaPit()).getPables()
           > game.getPit(game.getPlayers()[1].getMancalaPit()).getPables()) {
