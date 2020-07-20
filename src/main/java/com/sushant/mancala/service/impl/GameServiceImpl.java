@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 public class GameServiceImpl implements GameService {
 
-  private final Logger LOGGER= LoggerFactory.getLogger(GameServiceImpl.class);
+  private final static Logger LOGGER= LoggerFactory.getLogger(GameServiceImpl.class);
 
   @Inject private GameRepository gameRepository;
 

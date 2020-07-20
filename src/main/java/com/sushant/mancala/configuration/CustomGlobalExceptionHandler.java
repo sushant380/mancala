@@ -21,7 +21,7 @@ import java.util.Map;
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-  private final Logger LOGGER= LoggerFactory.getLogger(CustomGlobalExceptionHandler.class);
+  private final static Logger LOGGER= LoggerFactory.getLogger(CustomGlobalExceptionHandler.class);
 
   // error handle for internal data exception due to malformed data.
   @ExceptionHandler(GameNotFoundException.class)

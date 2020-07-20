@@ -21,7 +21,7 @@ import java.util.stream.IntStream;
  */
 @Component
 public class GameHandler {
-  private final Logger LOGGER= LoggerFactory.getLogger(GameHandler.class);
+  private static final Logger LOGGER= LoggerFactory.getLogger(GameHandler.class);
   /**
    * Create new game with given pits and pables values. Game will always have double number of pits
    * and it will assign default pables to each pit. This will also decide which pit is mancala pit.
