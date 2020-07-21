@@ -9,6 +9,9 @@
 ### Java, Maven, Spring Boot, Spring Security, Rest API, Swagger, Embedded Mongo DB  
   
 Mancala is a family of board games played around the world, sometimes called "sowing" games, or "count-and-capture" games, which describes the gameplay. This application provides api to implement mancala game.  
+
+##Demo
+Demo Application hosted on heroku <https://mankalah.herokuapp.com/>
   
 ## Tech Stack  
   

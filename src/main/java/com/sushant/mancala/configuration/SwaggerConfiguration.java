@@ -13,7 +13,15 @@ import org.springframework.context.annotation.Configuration;
 
 /** Swagger integration to support Open API specification 2. */
 @Configuration
-@SecurityScheme(name = "basicAuth", type = SecuritySchemeType.HTTP, scheme = "basic")
+@SecurityScheme(
+    name = "basicAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "basic",
+    description =
+        "Login with below credentials to use API.<br> " +
+                "<b>Player 1</b>: <i>username</i>: player1&nbsp;&nbsp;&nbsp;<i>password</i>: player1<br>" +
+                "<b>Player 2</b>: <i>username</i>: player2&nbsp;&nbsp;&nbsp;<i>password</i>: player2 <br>" +
+                "<b>Admin to delete</b>: <i>username</i>: admin&nbsp;&nbsp;&nbsp;<i>password</i>: admin")
 public class SwaggerConfiguration {
   @Bean
   public OpenAPI openAPI(BuildConfiguration buildConfiguration) {
